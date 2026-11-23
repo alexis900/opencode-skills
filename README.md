@@ -8,6 +8,7 @@ directory with a `SKILL.md` and optional `references/` and `templates/` files.
 | Skill | Description |
 |---|---|
 | `privacy-audit` | Audits whether an application's legal documents reflect its actual data practices. Read-only, evidence-based, with GDPR and multi-jurisdiction support. |
+| `rust` | Applies a rigorous Rust engineering and security baseline to implementation, review, async, crypto, auth, dependencies and CI. |
 
 ---
 
@@ -59,12 +60,12 @@ privacy-audit/
 
 ### Installation
 
-Copy the skill into the global OpenCode skills directory:
+Copy one or more skills into the global OpenCode skills directory:
 
 ```bash
 git clone https://github.com/alexis900/opencode-skills.git
 mkdir -p ~/.config/opencode/skills
-cp -r opencode-skills/privacy-audit ~/.config/opencode/skills/
+cp -r opencode-skills/privacy-audit opencode-skills/rust ~/.config/opencode/skills/
 ```
 
 Or clone the collection inside the skills directory. OpenCode discovers nested `SKILL.md` files in
@@ -75,8 +76,8 @@ git clone https://github.com/alexis900/opencode-skills.git \
   ~/.config/opencode/skills/opencode-skills
 ```
 
-The skill ID is `privacy-audit`, derived from the directory name. Load it explicitly with
-`@privacy-audit` or let OpenCode load it when a request matches its description.
+Each skill ID is its directory name (`privacy-audit`, `rust`). Load one explicitly with
+`@privacy-audit` or `@rust`, or let OpenCode load it when a request matches its description.
 
 ### Safety
 
@@ -92,7 +93,59 @@ qualified privacy lawyer for compliance-critical decisions.
 
 ---
 
-## Adaptation notes
+## rust
+
+A self-contained engineering and security baseline for Rust code. It covers implementation, review
+and hardening of crates and services, and defines its own criteria without deferring to external
+documents.
+
+### When it activates
+
+- Writing or refactoring Rust code, Cargo projects and workspace layout.
+- Reviewing pull requests or auditing a crate for security and reliability.
+- Choosing dependencies, configuring Clippy/CI or supply-chain checks.
+- Hardening async/Tokio services, cryptography, authentication or web endpoints.
+
+### What it covers
+
+- **Errors:** layered `Result`/`thiserror`, boundary mapping without leaking internals, no panics
+  in production paths.
+- **Memory and `unsafe`:** `forbid(unsafe_code)` by default, `// SAFETY:` invariants, strong
+  newtypes, `secrecy`/`zeroize`.
+- **Async and concurrency:** no blocking on the runtime, no locks across `await`, bounded channels,
+  timeouts, cancellation safety.
+- **Crypto and auth:** Argon2id, CSPRNG tokens, constant-time comparison, revocable sessions,
+  strict JWT validation.
+- **Web services:** body/time limits, security headers, CSRF, SSRF allowlists, parameterized SQL,
+  tenant checks, rate limiting.
+- **Dependencies and CI:** `cargo deny`, `cargo audit`, lint policy, MSRV, minimal features,
+  negative tests.
+
+### Structure
+
+```text
+rust/
+├── SKILL.md
+├── references/
+│   ├── async-concurrency.md
+│   ├── crypto-auth.md
+│   ├── dependencies-ci.md
+│   ├── error-handling.md
+│   ├── unsafe-memory.md
+│   └── web-services.md
+└── templates/
+    └── rust-review.md
+```
+
+### Usage
+
+Mention `@rust` explicitly, or let OpenCode load it when a request matches its description. The
+review template is at `rust/templates/rust-review.md`; supporting references are read only when the
+skill directs the agent to them.
+
+---
+
+## Adaptation notes (privacy-audit)
 
 This skill is adapted from [bellu/privacy-audit](https://github.com/bellu/privacy-audit) (MIT). The
 methodology, coverage and legal references are preserved. The following changes were made for
