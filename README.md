@@ -7,6 +7,7 @@ directory with a `SKILL.md` and optional `references/` and `templates/` files.
 
 | Skill | Description |
 |---|---|
+| `dba-secure` | Senior DBA and defensive database security for PostgreSQL, MySQL/MariaDB, SQL Server and MongoDB: least privilege, TLS, auditing, verified backups, incident response and read-only audit scripts. |
 | `privacy-audit` | Audits whether an application's legal documents reflect its actual data practices. Read-only, evidence-based, with GDPR and multi-jurisdiction support. |
 | `rust` | Applies a rigorous Rust engineering and security baseline to implementation, review, async, crypto, auth, dependencies and CI. |
 | `versioning` | Defines and audits semantic versioning, release tags, CHANGELOG rules, pre-1.0 policy, monorepo alignment and release checklists. |
@@ -66,7 +67,8 @@ Copy one or more skills into the global OpenCode skills directory:
 ```bash
 git clone https://github.com/alexis900/opencode-skills.git
 mkdir -p ~/.config/opencode/skills
-cp -r opencode-skills/privacy-audit opencode-skills/rust ~/.config/opencode/skills/
+cp -r opencode-skills/dba-secure opencode-skills/privacy-audit \
+  opencode-skills/rust ~/.config/opencode/skills/
 ```
 
 Or clone the collection inside the skills directory. OpenCode discovers nested `SKILL.md` files in
@@ -77,8 +79,9 @@ git clone https://github.com/alexis900/opencode-skills.git \
   ~/.config/opencode/skills/opencode-skills
 ```
 
-Each skill ID is its directory name (`privacy-audit`, `rust`). Load one explicitly with
-`@privacy-audit` or `@rust`, or let OpenCode load it when a request matches its description.
+Each skill ID is its directory name (`dba-secure`, `privacy-audit`, `rust`, `versioning`). Load one
+explicitly with `@dba-secure` or `@rust`, or let OpenCode load it when a request matches its
+description.
 
 ### Safety
 
@@ -143,6 +146,64 @@ rust/
 Mention `@rust` explicitly, or let OpenCode load it when a request matches its description. The
 review template is at `rust/templates/rust-review.md`; supporting references are read only when the
 skill directs the agent to them.
+
+---
+
+## dba-secure
+
+A senior DBA and defensive database security baseline for PostgreSQL, MySQL/MariaDB, SQL Server and
+MongoDB. It focuses on preventing unauthorized access, data leaks and misconfiguration rather than
+on offensive testing.
+
+### When it activates
+
+- Auditing, designing or hardening a database instance.
+- Reviewing roles, grants, authentication, TLS or encryption.
+- Setting up auditing, monitoring, backups or restore drills.
+- Responding to a suspected database compromise.
+- Reviewing schema, migration or privilege changes.
+
+### What it covers
+
+- **Access:** least privilege, separated app/read-only/migration/DBA roles, RLS, disabled default
+  superusers.
+- **Network and crypto:** private binding, required TLS, encryption at rest, secret handling.
+- **Audit:** `pgaudit`, MySQL/MariaDB audit plugins, SQL Server Audit, MongoDB audit log and
+  off-host log shipping.
+- **Recovery:** encrypted off-host backups, PITR, tested restores and measured RPO/RTO.
+- **Operations:** patching, drift detection, alerting, incident runbook and change management.
+- **Engine references:** PostgreSQL, MySQL/MariaDB, SQL Server and MongoDB, plus a prioritized
+  production checklist with negative tests.
+
+### Structure
+
+```text
+dba-secure/
+├── SKILL.md
+├── references/
+│   ├── postgresql.md
+│   ├── mysql-mariadb.md
+│   ├── sqlserver.md
+│   ├── mongodb.md
+│   ├── secure-operations.md
+│   └── production-checklist.md
+└── scripts/
+    ├── pg-audit.sh
+    ├── mysql-audit.sh
+    └── mongo-audit.sh
+```
+
+### Usage
+
+Mention `@dba-secure`, or let OpenCode load it when a request matches its description. The audit
+scripts are read-only and print a warning when the current account lacks permission for a check. Run
+them with a dedicated audit role and a client config file, never with a password on the command line.
+
+### Safety
+
+Strictly defensive and read-only for assessments: no exploitation, brute force, exfiltration or
+penetration testing without written authorization. No secrets, tokens or personal data are printed
+or sent to third parties.
 
 ---
 
