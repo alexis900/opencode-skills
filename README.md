@@ -9,6 +9,7 @@ directory with a `SKILL.md` and optional `references/` and `templates/` files.
 |---|---|
 | `privacy-audit` | Audits whether an application's legal documents reflect its actual data practices. Read-only, evidence-based, with GDPR and multi-jurisdiction support. |
 | `rust` | Applies a rigorous Rust engineering and security baseline to implementation, review, async, crypto, auth, dependencies and CI. |
+| `versioning` | Defines and audits semantic versioning, release tags, CHANGELOG rules, pre-1.0 policy, monorepo alignment and release checklists. |
 
 ---
 
@@ -167,3 +168,35 @@ OpenCode:
 ## License
 
 MIT. See [LICENSE](./LICENSE).
+
+---
+
+## versioning
+
+Defines and audits the versioning and release system of a project: when a change needs a patch,
+minor or major release, how tags and release notes are produced, how the CHANGELOG is written and
+how data migrations and deprecations stay compatible.
+
+### When it activates
+
+The skill is advertised to the agent and loads when the user asks for:
+
+- Deciding a version bump.
+- Preparing a release, tag or release notes.
+- Writing or reviewing a CHANGELOG.
+- Naming branches for a milestone or phase.
+- Cutting pre-releases or release candidates.
+- Handling breaking changes or deprecations before 1.0.
+- Aligning versions in a monorepo, workspace or set of packages.
+- Tagging container images or checking whether a change is patch, minor or major.
+
+### How it works
+
+- Supplies the `MAJOR.MINOR.PATCH` decision table, the `0.0.x` / `0.x.0` / `1.0.0` policy and the
+  pre-release sequence.
+- Defines annotated tag rules, the branch/release flow and hotfix handling.
+- Requires Keep a Changelog entries in the same PR as the change.
+- Covers monorepo version alignment, container image labels and expand/contract migrations.
+- Includes a pre-tag checklist and a post-release verification list, plus an anti-pattern section.
+
+The template in `versioning/templates/release-checklist.md` can be copied into a release PR.
