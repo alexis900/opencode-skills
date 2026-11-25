@@ -7,6 +7,7 @@ directory with a `SKILL.md` and optional `references/` and `templates/` files.
 
 | Skill | Description |
 |---|---|
+| `appsec-web` | Application security review and hardening for web apps and APIs: auth, sessions, authorization, injection, XSS, SSRF, CSRF, CORS, headers, rate limiting and negative tests. |
 | `dba-secure` | Senior DBA and defensive database security for PostgreSQL, MySQL/MariaDB, SQL Server and MongoDB: least privilege, TLS, auditing, verified backups, incident response and read-only audit scripts. |
 | `privacy-audit` | Audits whether an application's legal documents reflect its actual data practices. Read-only, evidence-based, with GDPR and multi-jurisdiction support. |
 | `rust` | Applies a rigorous Rust engineering and security baseline to implementation, review, async, crypto, auth, dependencies and CI. |
@@ -67,8 +68,8 @@ Copy one or more skills into the global OpenCode skills directory:
 ```bash
 git clone https://github.com/alexis900/opencode-skills.git
 mkdir -p ~/.config/opencode/skills
-cp -r opencode-skills/dba-secure opencode-skills/privacy-audit \
-  opencode-skills/rust ~/.config/opencode/skills/
+cp -r opencode-skills/appsec-web opencode-skills/dba-secure \
+  opencode-skills/privacy-audit opencode-skills/rust ~/.config/opencode/skills/
 ```
 
 Or clone the collection inside the skills directory. OpenCode discovers nested `SKILL.md` files in
@@ -79,9 +80,9 @@ git clone https://github.com/alexis900/opencode-skills.git \
   ~/.config/opencode/skills/opencode-skills
 ```
 
-Each skill ID is its directory name (`dba-secure`, `privacy-audit`, `rust`, `versioning`). Load one
-explicitly with `@dba-secure` or `@rust`, or let OpenCode load it when a request matches its
-description.
+Each skill ID is its directory name (`appsec-web`, `dba-secure`, `privacy-audit`, `rust`,
+`versioning`). Load one explicitly with `@appsec-web` or `@dba-secure`, or let OpenCode load it when
+a request matches its description.
 
 ### Safety
 
@@ -146,6 +147,61 @@ rust/
 Mention `@rust` explicitly, or let OpenCode load it when a request matches its description. The
 review template is at `rust/templates/rust-review.md`; supporting references are read only when the
 skill directs the agent to them.
+
+---
+
+## appsec-web
+
+A framework-agnostic application security baseline for web apps, APIs and browser clients. It
+reviews and hardens authentication, authorization and data handling, and proves controls with
+negative tests.
+
+### When it activates
+
+- Reviewing or hardening a web app, API, SPA or GraphQL service.
+- Auditing authentication, sessions, OAuth/OIDC, JWT or MFA.
+- Investigating IDOR/BOLA, multi-tenant leaks, injection, XSS, SSRF or CSRF.
+- Hardening headers, cookies, CORS, rate limits or error handling.
+- Adding security regression tests or reviewing a security-sensitive PR.
+
+### What it covers
+
+- **Identity:** Argon2id, session cookies, rotation and revocation, JWT validation, OAuth
+  `state`/PKCE, account recovery and enumeration.
+- **Authorization:** central deny-by-default policy, object-level checks, tenant isolation, mass
+  assignment, admin surfaces and GraphQL.
+- **Input and output:** SQL/NoSQL/command injection, contextual encoding and CSP, SSRF, path
+  traversal, uploads, XXE, deserialization and redirects.
+- **Browser and API:** CORS, CSRF, headers, TLS, rate limiting, caching, logging and WebSocket
+  hardening.
+- **Verification:** prioritized checklist with CWE/ASVS references and negative tests.
+
+### Structure
+
+```text
+appsec-web/
+├── SKILL.md
+├── references/
+│   ├── authentication-sessions.md
+│   ├── authorization-tenancy.md
+│   ├── input-output.md
+│   ├── api-browser-hardening.md
+│   └── review-checklist.md
+└── scripts/
+    ├── web-headers-audit.sh
+    └── repo-appsec-scan.sh
+```
+
+### Usage
+
+Mention `@appsec-web`, or let OpenCode load it when a request matches its description. Both scripts
+are read-only: `web-headers-audit.sh` requires `--authorized` and only sends GET/HEAD/OPTIONS, while
+`repo-appsec-scan.sh` prints candidate patterns for manual review, never verdicts.
+
+### Safety
+
+Strictly defensive. No exploitation, brute force or exfiltration without written authorization.
+Evidence is redacted; secrets and personal data are never printed.
 
 ---
 
